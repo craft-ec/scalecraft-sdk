@@ -1,0 +1,5801 @@
+{
+  "address": "YxF3CEwUr5Nhk8FjzZDhKFcSHfgRHYA31Ccm3vd2Mrz",
+  "metadata": {
+    "name": "scalecraft",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Decentralized arbitration protocol"
+  },
+  "instructions": [
+    {
+      "name": "add_bond_direct",
+      "docs": [
+        "Add bond directly from wallet"
+      ],
+      "discriminator": [
+        2,
+        240,
+        206,
+        50,
+        106,
+        238,
+        109,
+        254
+      ],
+      "accounts": [
+        {
+          "name": "defender",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "subject",
+          "writable": true
+        },
+        {
+          "name": "defender_record",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  101,
+                  102,
+                  101,
+                  110,
+                  100,
+                  101,
+                  114,
+                  95,
+                  114,
+                  101,
+                  99,
+                  111,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              },
+              {
+                "kind": "account",
+                "path": "defender"
+              },
+              {
+                "kind": "account",
+                "path": "subject.round",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "defender_pool",
+          "docs": [
+            "Defender's pool - created if doesn't exist"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  101,
+                  102,
+                  101,
+                  110,
+                  100,
+                  101,
+                  114,
+                  95,
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "defender"
+              }
+            ]
+          }
+        },
+        {
+          "name": "dispute",
+          "docs": [
+            "Optional: Active dispute (for updating bond_at_risk during dispute)"
+          ],
+          "writable": true,
+          "optional": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  105,
+                  115,
+                  112,
+                  117,
+                  116,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "add_bond_from_pool",
+      "docs": [
+        "Add bond from defender pool"
+      ],
+      "discriminator": [
+        127,
+        107,
+        194,
+        189,
+        87,
+        53,
+        213,
+        211
+      ],
+      "accounts": [
+        {
+          "name": "defender",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "subject",
+          "writable": true
+        },
+        {
+          "name": "defender_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  101,
+                  102,
+                  101,
+                  110,
+                  100,
+                  101,
+                  114,
+                  95,
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "defender"
+              }
+            ]
+          }
+        },
+        {
+          "name": "defender_record",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  101,
+                  102,
+                  101,
+                  110,
+                  100,
+                  101,
+                  114,
+                  95,
+                  114,
+                  101,
+                  99,
+                  111,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              },
+              {
+                "kind": "account",
+                "path": "defender"
+              },
+              {
+                "kind": "account",
+                "path": "subject.round",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "dispute",
+          "docs": [
+            "Optional: Active dispute (for updating bond_at_risk during dispute)"
+          ],
+          "writable": true,
+          "optional": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  105,
+                  115,
+                  112,
+                  117,
+                  116,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "add_challenger_stake",
+      "docs": [
+        "Add stake to challenger pool"
+      ],
+      "discriminator": [
+        240,
+        11,
+        100,
+        179,
+        24,
+        255,
+        67,
+        234
+      ],
+      "accounts": [
+        {
+          "name": "challenger",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "challenger_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  104,
+                  97,
+                  108,
+                  108,
+                  101,
+                  110,
+                  103,
+                  101,
+                  114,
+                  95,
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "challenger"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "add_juror_stake",
+      "docs": [
+        "Add stake to juror pool"
+      ],
+      "discriminator": [
+        42,
+        194,
+        234,
+        159,
+        186,
+        115,
+        32,
+        169
+      ],
+      "accounts": [
+        {
+          "name": "juror",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "juror_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  106,
+                  117,
+                  114,
+                  111,
+                  114,
+                  95,
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "juror"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "add_to_vote",
+      "docs": [
+        "Add stake to an existing vote"
+      ],
+      "discriminator": [
+        202,
+        66,
+        94,
+        152,
+        90,
+        103,
+        240,
+        68
+      ],
+      "accounts": [
+        {
+          "name": "juror",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "juror_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  106,
+                  117,
+                  114,
+                  111,
+                  114,
+                  95,
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "juror"
+              }
+            ]
+          }
+        },
+        {
+          "name": "subject",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  117,
+                  98,
+                  106,
+                  101,
+                  99,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "dispute",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  105,
+                  115,
+                  112,
+                  117,
+                  116,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "juror_record",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  106,
+                  117,
+                  114,
+                  111,
+                  114,
+                  95,
+                  114,
+                  101,
+                  99,
+                  111,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              },
+              {
+                "kind": "account",
+                "path": "juror"
+              },
+              {
+                "kind": "arg",
+                "path": "round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "round",
+          "type": "u32"
+        },
+        {
+          "name": "additional_stake",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "claim_challenger",
+      "docs": [
+        "Claim challenger reward"
+      ],
+      "discriminator": [
+        148,
+        51,
+        9,
+        223,
+        64,
+        230,
+        123,
+        189
+      ],
+      "accounts": [
+        {
+          "name": "challenger",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "subject",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  117,
+                  98,
+                  106,
+                  101,
+                  99,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrow",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "challenger_record",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  104,
+                  97,
+                  108,
+                  108,
+                  101,
+                  110,
+                  103,
+                  101,
+                  114,
+                  95,
+                  114,
+                  101,
+                  99,
+                  111,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              },
+              {
+                "kind": "account",
+                "path": "challenger"
+              },
+              {
+                "kind": "arg",
+                "path": "round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "challenger_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  104,
+                  97,
+                  108,
+                  108,
+                  101,
+                  110,
+                  103,
+                  101,
+                  114,
+                  95,
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "challenger"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "round",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "claim_defender",
+      "docs": [
+        "Claim defender reward"
+      ],
+      "discriminator": [
+        230,
+        104,
+        48,
+        216,
+        165,
+        86,
+        123,
+        142
+      ],
+      "accounts": [
+        {
+          "name": "defender",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "subject",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  117,
+                  98,
+                  106,
+                  101,
+                  99,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrow",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "defender_record",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  101,
+                  102,
+                  101,
+                  110,
+                  100,
+                  101,
+                  114,
+                  95,
+                  114,
+                  101,
+                  99,
+                  111,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              },
+              {
+                "kind": "account",
+                "path": "defender"
+              },
+              {
+                "kind": "arg",
+                "path": "round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "defender_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  101,
+                  102,
+                  101,
+                  110,
+                  100,
+                  101,
+                  114,
+                  95,
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "defender"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "round",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "claim_juror",
+      "docs": [
+        "Claim juror reward"
+      ],
+      "discriminator": [
+        239,
+        58,
+        13,
+        171,
+        137,
+        109,
+        76,
+        30
+      ],
+      "accounts": [
+        {
+          "name": "juror",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "subject",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  117,
+                  98,
+                  106,
+                  101,
+                  99,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrow",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "juror_record",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  106,
+                  117,
+                  114,
+                  111,
+                  114,
+                  95,
+                  114,
+                  101,
+                  99,
+                  111,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              },
+              {
+                "kind": "account",
+                "path": "juror"
+              },
+              {
+                "kind": "arg",
+                "path": "round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "juror_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  106,
+                  117,
+                  114,
+                  111,
+                  114,
+                  95,
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "juror"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "round",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "close_challenger_record",
+      "docs": [
+        "Close challenger record"
+      ],
+      "discriminator": [
+        254,
+        255,
+        55,
+        246,
+        51,
+        196,
+        121,
+        232
+      ],
+      "accounts": [
+        {
+          "name": "challenger",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "subject",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  117,
+                  98,
+                  106,
+                  101,
+                  99,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrow",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "challenger_record",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  104,
+                  97,
+                  108,
+                  108,
+                  101,
+                  110,
+                  103,
+                  101,
+                  114,
+                  95,
+                  114,
+                  101,
+                  99,
+                  111,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              },
+              {
+                "kind": "account",
+                "path": "challenger"
+              },
+              {
+                "kind": "arg",
+                "path": "round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "round",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "close_defender_record",
+      "docs": [
+        "Close defender record"
+      ],
+      "discriminator": [
+        192,
+        4,
+        53,
+        135,
+        80,
+        151,
+        171,
+        87
+      ],
+      "accounts": [
+        {
+          "name": "defender",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "subject",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  117,
+                  98,
+                  106,
+                  101,
+                  99,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrow",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "defender_record",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  101,
+                  102,
+                  101,
+                  110,
+                  100,
+                  101,
+                  114,
+                  95,
+                  114,
+                  101,
+                  99,
+                  111,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              },
+              {
+                "kind": "account",
+                "path": "defender"
+              },
+              {
+                "kind": "arg",
+                "path": "round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "round",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "close_juror_record",
+      "docs": [
+        "Close juror record"
+      ],
+      "discriminator": [
+        17,
+        237,
+        233,
+        65,
+        255,
+        237,
+        33,
+        58
+      ],
+      "accounts": [
+        {
+          "name": "juror",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "subject",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  117,
+                  98,
+                  106,
+                  101,
+                  99,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrow",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "juror_record",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  106,
+                  117,
+                  114,
+                  111,
+                  114,
+                  95,
+                  114,
+                  101,
+                  99,
+                  111,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              },
+              {
+                "kind": "account",
+                "path": "juror"
+              },
+              {
+                "kind": "arg",
+                "path": "round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "round",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "create_defender_pool",
+      "docs": [
+        "Create a defender pool"
+      ],
+      "discriminator": [
+        146,
+        138,
+        10,
+        14,
+        120,
+        153,
+        97,
+        34
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "defender_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  101,
+                  102,
+                  101,
+                  110,
+                  100,
+                  101,
+                  114,
+                  95,
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "initial_amount",
+          "type": "u64"
+        },
+        {
+          "name": "max_bond",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "create_dispute",
+      "docs": [
+        "Create a dispute against a subject"
+      ],
+      "discriminator": [
+        161,
+        99,
+        53,
+        116,
+        60,
+        79,
+        149,
+        105
+      ],
+      "accounts": [
+        {
+          "name": "challenger",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "subject",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  117,
+                  98,
+                  106,
+                  101,
+                  99,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "dispute",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  105,
+                  115,
+                  112,
+                  117,
+                  116,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrow",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "challenger_record",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  104,
+                  97,
+                  108,
+                  108,
+                  101,
+                  110,
+                  103,
+                  101,
+                  114,
+                  95,
+                  114,
+                  101,
+                  99,
+                  111,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              },
+              {
+                "kind": "account",
+                "path": "challenger"
+              },
+              {
+                "kind": "account",
+                "path": "subject.round",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "challenger_pool",
+          "docs": [
+            "Challenger's pool - created if doesn't exist"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  104,
+                  97,
+                  108,
+                  108,
+                  101,
+                  110,
+                  103,
+                  101,
+                  114,
+                  95,
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "challenger"
+              }
+            ]
+          }
+        },
+        {
+          "name": "creator_defender_pool",
+          "docs": [
+            "Creator's defender pool - for auto-matching"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  101,
+                  102,
+                  101,
+                  110,
+                  100,
+                  101,
+                  114,
+                  95,
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.creator",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "creator_defender_record",
+          "docs": [
+            "Creator's defender record for this round - init_if_needed for pool contribution"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  101,
+                  102,
+                  101,
+                  110,
+                  100,
+                  101,
+                  114,
+                  95,
+                  114,
+                  101,
+                  99,
+                  111,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              },
+              {
+                "kind": "account",
+                "path": "subject.creator",
+                "account": "Subject"
+              },
+              {
+                "kind": "account",
+                "path": "subject.round",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "dispute_type",
+          "type": {
+            "defined": {
+              "name": "DisputeType"
+            }
+          }
+        },
+        {
+          "name": "details_cid",
+          "type": "string"
+        },
+        {
+          "name": "stake",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "create_subject",
+      "docs": [
+        "Create a subject with Subject + Dispute + Escrow PDAs",
+        "Creator's pool is linked. If initial_bond > 0, transfers from wallet."
+      ],
+      "discriminator": [
+        243,
+        24,
+        101,
+        208,
+        170,
+        5,
+        242,
+        26
+      ],
+      "accounts": [
+        {
+          "name": "creator",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "subject",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  117,
+                  98,
+                  106,
+                  101,
+                  99,
+                  116
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "subject_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "dispute",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  105,
+                  115,
+                  112,
+                  117,
+                  116,
+                  101
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "subject_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrow",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "subject_id"
+              }
+            ]
+          }
+        },
+        {
+          "name": "defender_pool",
+          "docs": [
+            "Creator's defender pool - created if doesn't exist"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  101,
+                  102,
+                  101,
+                  110,
+                  100,
+                  101,
+                  114,
+                  95,
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "creator"
+              }
+            ]
+          }
+        },
+        {
+          "name": "defender_record",
+          "docs": [
+            "Creator's defender record for round 0"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  101,
+                  102,
+                  101,
+                  110,
+                  100,
+                  101,
+                  114,
+                  95,
+                  114,
+                  101,
+                  99,
+                  111,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "arg",
+                "path": "subject_id"
+              },
+              {
+                "kind": "account",
+                "path": "creator"
+              },
+              {
+                "kind": "const",
+                "value": [
+                  0,
+                  0,
+                  0,
+                  0
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "subject_id",
+          "type": "pubkey"
+        },
+        {
+          "name": "details_cid",
+          "type": "string"
+        },
+        {
+          "name": "match_mode",
+          "type": "bool"
+        },
+        {
+          "name": "voting_period",
+          "type": "i64"
+        },
+        {
+          "name": "initial_bond",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "deposit_defender_pool",
+      "docs": [
+        "Deposit to defender pool"
+      ],
+      "discriminator": [
+        91,
+        11,
+        23,
+        235,
+        88,
+        18,
+        65,
+        162
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "defender_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  101,
+                  102,
+                  101,
+                  110,
+                  100,
+                  101,
+                  114,
+                  95,
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "initialize_config",
+      "docs": [
+        "Initialize protocol config (one-time setup by deployer)"
+      ],
+      "discriminator": [
+        208,
+        127,
+        21,
+        1,
+        194,
+        190,
+        196,
+        70
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "join_challengers",
+      "docs": [
+        "Join existing dispute as additional challenger"
+      ],
+      "discriminator": [
+        223,
+        204,
+        21,
+        113,
+        209,
+        155,
+        162,
+        77
+      ],
+      "accounts": [
+        {
+          "name": "challenger",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "subject",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  117,
+                  98,
+                  106,
+                  101,
+                  99,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "dispute",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  105,
+                  115,
+                  112,
+                  117,
+                  116,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "challenger_record",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  104,
+                  97,
+                  108,
+                  108,
+                  101,
+                  110,
+                  103,
+                  101,
+                  114,
+                  95,
+                  114,
+                  101,
+                  99,
+                  111,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              },
+              {
+                "kind": "account",
+                "path": "challenger"
+              },
+              {
+                "kind": "account",
+                "path": "subject.round",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "challenger_pool",
+          "docs": [
+            "Challenger's pool - created if doesn't exist"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  104,
+                  97,
+                  108,
+                  108,
+                  101,
+                  110,
+                  103,
+                  101,
+                  114,
+                  95,
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "challenger"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "details_cid",
+          "type": "string"
+        },
+        {
+          "name": "stake",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "register_challenger",
+      "docs": [
+        "Register as a challenger"
+      ],
+      "discriminator": [
+        69,
+        151,
+        151,
+        202,
+        4,
+        226,
+        241,
+        134
+      ],
+      "accounts": [
+        {
+          "name": "challenger",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "challenger_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  104,
+                  97,
+                  108,
+                  108,
+                  101,
+                  110,
+                  103,
+                  101,
+                  114,
+                  95,
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "challenger"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "stake_amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "register_juror",
+      "docs": [
+        "Register as a juror"
+      ],
+      "discriminator": [
+        116,
+        81,
+        98,
+        42,
+        220,
+        219,
+        2,
+        141
+      ],
+      "accounts": [
+        {
+          "name": "juror",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "juror_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  106,
+                  117,
+                  114,
+                  111,
+                  114,
+                  95,
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "juror"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "stake_amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "resolve_dispute",
+      "docs": [
+        "Resolve a dispute after voting period ends"
+      ],
+      "discriminator": [
+        231,
+        6,
+        202,
+        6,
+        96,
+        103,
+        12,
+        230
+      ],
+      "accounts": [
+        {
+          "name": "resolver",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "subject",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  117,
+                  98,
+                  106,
+                  101,
+                  99,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "dispute",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  105,
+                  115,
+                  112,
+                  117,
+                  116,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrow",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "protocol_config",
+          "docs": [
+            "Protocol config for treasury address"
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "treasury",
+          "docs": [
+            "Treasury receives platform fee"
+          ],
+          "writable": true
+        },
+        {
+          "name": "creator_defender_pool",
+          "docs": [
+            "Optional: Creator's defender pool to check for auto-rebond"
+          ],
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "creator_defender_record",
+          "docs": [
+            "Optional: Creator's defender record - initialized via init_if_needed",
+            "Uses subject.creator and next_round for PDA seeds"
+          ],
+          "writable": true,
+          "optional": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  101,
+                  102,
+                  101,
+                  110,
+                  100,
+                  101,
+                  114,
+                  95,
+                  114,
+                  101,
+                  99,
+                  111,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              },
+              {
+                "kind": "account",
+                "path": "subject.creator",
+                "account": "Subject"
+              },
+              {
+                "kind": "arg",
+                "path": "next_round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "next_round",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "submit_restore",
+      "docs": [
+        "Submit a restoration request for an invalidated subject"
+      ],
+      "discriminator": [
+        32,
+        59,
+        202,
+        78,
+        224,
+        183,
+        80,
+        191
+      ],
+      "accounts": [
+        {
+          "name": "restorer",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "subject",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  117,
+                  98,
+                  106,
+                  101,
+                  99,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "dispute",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  105,
+                  115,
+                  112,
+                  117,
+                  116,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrow",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "challenger_record",
+          "docs": [
+            "Challenger record for the restorer (acts as first challenger)"
+          ],
+          "writable": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "dispute_type",
+          "type": {
+            "defined": {
+              "name": "DisputeType"
+            }
+          }
+        },
+        {
+          "name": "details_cid",
+          "type": "string"
+        },
+        {
+          "name": "stake_amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "sweep_round_creator",
+      "docs": [
+        "Creator sweep unclaimed funds (after 30 days)"
+      ],
+      "discriminator": [
+        171,
+        13,
+        243,
+        211,
+        73,
+        235,
+        65,
+        30
+      ],
+      "accounts": [
+        {
+          "name": "creator",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "subject",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  117,
+                  98,
+                  106,
+                  101,
+                  99,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrow",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "round",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "sweep_round_treasury",
+      "docs": [
+        "Treasury sweep unclaimed funds (after 90 days)"
+      ],
+      "discriminator": [
+        224,
+        70,
+        132,
+        233,
+        159,
+        248,
+        133,
+        130
+      ],
+      "accounts": [
+        {
+          "name": "sweeper",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "subject",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  117,
+                  98,
+                  106,
+                  101,
+                  99,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrow",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "protocol_config",
+          "docs": [
+            "Protocol config for treasury address"
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "treasury",
+          "docs": [
+            "Treasury receives swept funds"
+          ],
+          "writable": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "round",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "unlock_juror_stake",
+      "docs": [
+        "Unlock juror stake (7 days after resolution)"
+      ],
+      "discriminator": [
+        109,
+        73,
+        56,
+        32,
+        115,
+        125,
+        5,
+        242
+      ],
+      "accounts": [
+        {
+          "name": "juror",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "subject",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  117,
+                  98,
+                  106,
+                  101,
+                  99,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "escrow",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  101,
+                  115,
+                  99,
+                  114,
+                  111,
+                  119
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "juror_record",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  106,
+                  117,
+                  114,
+                  111,
+                  114,
+                  95,
+                  114,
+                  101,
+                  99,
+                  111,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              },
+              {
+                "kind": "account",
+                "path": "juror"
+              },
+              {
+                "kind": "arg",
+                "path": "round"
+              }
+            ]
+          }
+        },
+        {
+          "name": "juror_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  106,
+                  117,
+                  114,
+                  111,
+                  114,
+                  95,
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "juror"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "round",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "unregister_juror",
+      "docs": [
+        "Unregister juror"
+      ],
+      "discriminator": [
+        199,
+        200,
+        113,
+        139,
+        182,
+        118,
+        206,
+        124
+      ],
+      "accounts": [
+        {
+          "name": "juror",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "juror_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  106,
+                  117,
+                  114,
+                  111,
+                  114,
+                  95,
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "juror"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": []
+    },
+    {
+      "name": "update_max_bond",
+      "docs": [
+        "Update max_bond setting for defender pool"
+      ],
+      "discriminator": [
+        19,
+        70,
+        113,
+        22,
+        140,
+        149,
+        203,
+        23
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "defender_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  101,
+                  102,
+                  101,
+                  110,
+                  100,
+                  101,
+                  114,
+                  95,
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "new_max_bond",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "update_treasury",
+      "docs": [
+        "Update treasury address (admin only)"
+      ],
+      "discriminator": [
+        60,
+        16,
+        243,
+        66,
+        96,
+        59,
+        254,
+        131
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "config"
+          ]
+        },
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "new_treasury",
+          "type": "pubkey"
+        }
+      ]
+    },
+    {
+      "name": "vote_on_dispute",
+      "docs": [
+        "Vote on a dispute"
+      ],
+      "discriminator": [
+        7,
+        213,
+        96,
+        171,
+        252,
+        59,
+        55,
+        23
+      ],
+      "accounts": [
+        {
+          "name": "juror",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "juror_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  106,
+                  117,
+                  114,
+                  111,
+                  114,
+                  95,
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "juror"
+              }
+            ]
+          }
+        },
+        {
+          "name": "subject",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  117,
+                  98,
+                  106,
+                  101,
+                  99,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "dispute",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  105,
+                  115,
+                  112,
+                  117,
+                  116,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "juror_record",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  106,
+                  117,
+                  114,
+                  111,
+                  114,
+                  95,
+                  114,
+                  101,
+                  99,
+                  111,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              },
+              {
+                "kind": "account",
+                "path": "juror"
+              },
+              {
+                "kind": "account",
+                "path": "subject.round",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "choice",
+          "type": {
+            "defined": {
+              "name": "VoteChoice"
+            }
+          }
+        },
+        {
+          "name": "stake_allocation",
+          "type": "u64"
+        },
+        {
+          "name": "rationale_cid",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "vote_on_restore",
+      "docs": [
+        "Vote on a restoration"
+      ],
+      "discriminator": [
+        122,
+        123,
+        92,
+        240,
+        251,
+        205,
+        189,
+        32
+      ],
+      "accounts": [
+        {
+          "name": "juror",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "juror_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  106,
+                  117,
+                  114,
+                  111,
+                  114,
+                  95,
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "juror"
+              }
+            ]
+          }
+        },
+        {
+          "name": "subject",
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  115,
+                  117,
+                  98,
+                  106,
+                  101,
+                  99,
+                  116
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "dispute",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  105,
+                  115,
+                  112,
+                  117,
+                  116,
+                  101
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "juror_record",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  106,
+                  117,
+                  114,
+                  111,
+                  114,
+                  95,
+                  114,
+                  101,
+                  99,
+                  111,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "Subject"
+              },
+              {
+                "kind": "account",
+                "path": "juror"
+              },
+              {
+                "kind": "account",
+                "path": "subject.round",
+                "account": "Subject"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "choice",
+          "type": {
+            "defined": {
+              "name": "RestoreVoteChoice"
+            }
+          }
+        },
+        {
+          "name": "stake_allocation",
+          "type": "u64"
+        },
+        {
+          "name": "rationale_cid",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "withdraw_challenger_stake",
+      "docs": [
+        "Withdraw from challenger pool"
+      ],
+      "discriminator": [
+        78,
+        33,
+        10,
+        217,
+        10,
+        63,
+        81,
+        45
+      ],
+      "accounts": [
+        {
+          "name": "challenger",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "challenger_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  99,
+                  104,
+                  97,
+                  108,
+                  108,
+                  101,
+                  110,
+                  103,
+                  101,
+                  114,
+                  95,
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "challenger"
+              }
+            ]
+          }
+        },
+        {
+          "name": "protocol_config",
+          "docs": [
+            "Protocol config for treasury address"
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "treasury",
+          "docs": [
+            "Treasury receives slashed amounts"
+          ],
+          "writable": true
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "withdraw_defender_pool",
+      "docs": [
+        "Withdraw from defender pool"
+      ],
+      "discriminator": [
+        34,
+        62,
+        12,
+        146,
+        220,
+        10,
+        123,
+        61
+      ],
+      "accounts": [
+        {
+          "name": "owner",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "defender_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  101,
+                  102,
+                  101,
+                  110,
+                  100,
+                  101,
+                  114,
+                  95,
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "owner"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "withdraw_juror_stake",
+      "docs": [
+        "Withdraw from juror pool"
+      ],
+      "discriminator": [
+        178,
+        43,
+        144,
+        250,
+        188,
+        199,
+        135,
+        133
+      ],
+      "accounts": [
+        {
+          "name": "juror",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "juror_pool",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  106,
+                  117,
+                  114,
+                  111,
+                  114,
+                  95,
+                  112,
+                  111,
+                  111,
+                  108
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "juror"
+              }
+            ]
+          }
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    }
+  ],
+  "accounts": [
+    {
+      "name": "ChallengerPool",
+      "discriminator": [
+        88,
+        158,
+        225,
+        15,
+        47,
+        185,
+        77,
+        238
+      ]
+    },
+    {
+      "name": "ChallengerRecord",
+      "discriminator": [
+        8,
+        80,
+        134,
+        108,
+        192,
+        142,
+        121,
+        14
+      ]
+    },
+    {
+      "name": "DefenderPool",
+      "discriminator": [
+        227,
+        100,
+        92,
+        157,
+        203,
+        252,
+        63,
+        118
+      ]
+    },
+    {
+      "name": "DefenderRecord",
+      "discriminator": [
+        14,
+        3,
+        219,
+        215,
+        38,
+        254,
+        254,
+        92
+      ]
+    },
+    {
+      "name": "Dispute",
+      "discriminator": [
+        36,
+        49,
+        241,
+        67,
+        40,
+        36,
+        241,
+        74
+      ]
+    },
+    {
+      "name": "Escrow",
+      "discriminator": [
+        31,
+        213,
+        123,
+        187,
+        186,
+        22,
+        218,
+        155
+      ]
+    },
+    {
+      "name": "JurorPool",
+      "discriminator": [
+        217,
+        104,
+        42,
+        167,
+        209,
+        1,
+        171,
+        33
+      ]
+    },
+    {
+      "name": "JurorRecord",
+      "discriminator": [
+        144,
+        76,
+        94,
+        12,
+        102,
+        207,
+        151,
+        40
+      ]
+    },
+    {
+      "name": "ProtocolConfig",
+      "discriminator": [
+        207,
+        91,
+        250,
+        28,
+        152,
+        179,
+        215,
+        209
+      ]
+    },
+    {
+      "name": "Subject",
+      "discriminator": [
+        52,
+        161,
+        41,
+        165,
+        202,
+        238,
+        138,
+        166
+      ]
+    }
+  ],
+  "events": [
+    {
+      "name": "AddToVoteEvent",
+      "discriminator": [
+        228,
+        249,
+        101,
+        93,
+        5,
+        47,
+        190,
+        66
+      ]
+    },
+    {
+      "name": "BondAddedEvent",
+      "discriminator": [
+        139,
+        73,
+        9,
+        193,
+        204,
+        12,
+        69,
+        174
+      ]
+    },
+    {
+      "name": "BondWithdrawnEvent",
+      "discriminator": [
+        1,
+        22,
+        115,
+        176,
+        15,
+        248,
+        123,
+        151
+      ]
+    },
+    {
+      "name": "ChallengerJoinedEvent",
+      "discriminator": [
+        163,
+        95,
+        96,
+        131,
+        237,
+        97,
+        229,
+        35
+      ]
+    },
+    {
+      "name": "DisputeCreatedEvent",
+      "discriminator": [
+        89,
+        162,
+        48,
+        158,
+        30,
+        116,
+        145,
+        247
+      ]
+    },
+    {
+      "name": "DisputeResolvedEvent",
+      "discriminator": [
+        152,
+        37,
+        98,
+        245,
+        229,
+        39,
+        150,
+        78
+      ]
+    },
+    {
+      "name": "PoolDepositEvent",
+      "discriminator": [
+        17,
+        52,
+        153,
+        164,
+        206,
+        202,
+        228,
+        220
+      ]
+    },
+    {
+      "name": "PoolWithdrawEvent",
+      "discriminator": [
+        4,
+        215,
+        203,
+        122,
+        8,
+        73,
+        179,
+        46
+      ]
+    },
+    {
+      "name": "RecordClosedEvent",
+      "discriminator": [
+        127,
+        196,
+        65,
+        213,
+        113,
+        178,
+        80,
+        55
+      ]
+    },
+    {
+      "name": "RestoreResolvedEvent",
+      "discriminator": [
+        151,
+        57,
+        204,
+        231,
+        9,
+        240,
+        171,
+        205
+      ]
+    },
+    {
+      "name": "RestoreSubmittedEvent",
+      "discriminator": [
+        91,
+        160,
+        93,
+        112,
+        192,
+        112,
+        155,
+        30
+      ]
+    },
+    {
+      "name": "RestoreVoteEvent",
+      "discriminator": [
+        54,
+        218,
+        241,
+        44,
+        90,
+        247,
+        210,
+        238
+      ]
+    },
+    {
+      "name": "RewardClaimedEvent",
+      "discriminator": [
+        246,
+        43,
+        215,
+        228,
+        82,
+        49,
+        230,
+        56
+      ]
+    },
+    {
+      "name": "RoundSweptEvent",
+      "discriminator": [
+        245,
+        127,
+        207,
+        243,
+        30,
+        229,
+        3,
+        134
+      ]
+    },
+    {
+      "name": "StakeUnlockedEvent",
+      "discriminator": [
+        99,
+        31,
+        70,
+        177,
+        150,
+        105,
+        180,
+        93
+      ]
+    },
+    {
+      "name": "SubjectCreatedEvent",
+      "discriminator": [
+        70,
+        23,
+        14,
+        215,
+        220,
+        223,
+        89,
+        17
+      ]
+    },
+    {
+      "name": "SubjectStatusChangedEvent",
+      "discriminator": [
+        118,
+        28,
+        47,
+        229,
+        59,
+        42,
+        149,
+        118
+      ]
+    },
+    {
+      "name": "VoteEvent",
+      "discriminator": [
+        195,
+        71,
+        250,
+        105,
+        120,
+        119,
+        234,
+        134
+      ]
+    }
+  ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "InsufficientBalance",
+      "msg": "Insufficient balance in defender pool"
+    }
+  ],
+  "types": [
+    {
+      "name": "AddToVoteEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "subject_id",
+            "type": "pubkey"
+          },
+          {
+            "name": "round",
+            "type": "u32"
+          },
+          {
+            "name": "juror",
+            "type": "pubkey"
+          },
+          {
+            "name": "additional_stake",
+            "type": "u64"
+          },
+          {
+            "name": "additional_voting_power",
+            "type": "u64"
+          },
+          {
+            "name": "total_stake",
+            "type": "u64"
+          },
+          {
+            "name": "total_voting_power",
+            "type": "u64"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "BondAddedEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "subject_id",
+            "type": "pubkey"
+          },
+          {
+            "name": "defender",
+            "type": "pubkey"
+          },
+          {
+            "name": "round",
+            "type": "u32"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "source",
+            "type": {
+              "defined": {
+                "name": "BondSource"
+              }
+            }
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "BondSource",
+      "docs": [
+        "Source of bond funds"
+      ],
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Direct"
+          },
+          {
+            "name": "Pool"
+          }
+        ]
+      }
+    },
+    {
+      "name": "BondWithdrawnEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "defender",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ChallengerJoinedEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "subject_id",
+            "type": "pubkey"
+          },
+          {
+            "name": "round",
+            "type": "u32"
+          },
+          {
+            "name": "challenger",
+            "type": "pubkey"
+          },
+          {
+            "name": "stake",
+            "type": "u64"
+          },
+          {
+            "name": "total_stake",
+            "type": "u64"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ChallengerPool",
+      "docs": [
+        "Challenger's pool for holding stake funds",
+        "Seeds: [CHALLENGER_POOL_SEED, owner]",
+        "One per user, persistent"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "docs": [
+              "Pool owner's wallet address"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "balance",
+            "docs": [
+              "Available balance"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "reputation",
+            "docs": [
+              "Reputation score (6 decimals, 100% = 100_000_000)"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "Bump seed for PDA"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "created_at",
+            "docs": [
+              "Creation timestamp"
+            ],
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ChallengerRecord",
+      "docs": [
+        "Individual challenger's stake for a specific subject round",
+        "Seeds: [CHALLENGER_RECORD_SEED, subject_id, challenger, round]",
+        "Created per round, closed after claim"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "subject_id",
+            "docs": [
+              "The subject_id this record belongs to"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "challenger",
+            "docs": [
+              "Challenger's wallet address"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "round",
+            "docs": [
+              "Which round this stake is for"
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "stake",
+            "docs": [
+              "Stake amount contributed to the dispute"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "details_cid",
+            "docs": [
+              "Evidence CID (IPFS hash)"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "reward_claimed",
+            "docs": [
+              "Whether reward has been claimed"
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "Bump seed for PDA"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "challenged_at",
+            "docs": [
+              "Timestamp when this challenger joined"
+            ],
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ClaimRole",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Defender"
+          },
+          {
+            "name": "Challenger"
+          },
+          {
+            "name": "Juror"
+          }
+        ]
+      }
+    },
+    {
+      "name": "DefenderPool",
+      "docs": [
+        "Defender's pool for holding bond funds",
+        "Seeds: [DEFENDER_POOL_SEED, owner]",
+        "One per user, persistent"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "docs": [
+              "Pool owner's wallet address"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "balance",
+            "docs": [
+              "Available balance (not locked in active bonds)"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "max_bond",
+            "docs": [
+              "Max bond per subject (for auto-allocation)"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "Bump seed for PDA"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "created_at",
+            "docs": [
+              "Creation timestamp"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "updated_at",
+            "docs": [
+              "Last update timestamp"
+            ],
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "DefenderRecord",
+      "docs": [
+        "Individual defender's bond for a specific subject round",
+        "Seeds: [DEFENDER_RECORD_SEED, subject_id, defender, round]",
+        "Created per round, closed after claim"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "subject_id",
+            "docs": [
+              "The subject_id this record belongs to"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "defender",
+            "docs": [
+              "Defender's wallet address"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "round",
+            "docs": [
+              "Which round this bond is for"
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "bond",
+            "docs": [
+              "Bond amount backing the subject"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "source",
+            "docs": [
+              "Source of bond funds"
+            ],
+            "type": {
+              "defined": {
+                "name": "BondSource"
+              }
+            }
+          },
+          {
+            "name": "reward_claimed",
+            "docs": [
+              "Whether reward has been claimed"
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "Bump seed for PDA"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "bonded_at",
+            "docs": [
+              "Timestamp when this defender bonded"
+            ],
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Dispute",
+      "docs": [
+        "Dispute - Persistent PDA, reset after each round",
+        "Seeds: [DISPUTE_SEED, subject_id]"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "subject_id",
+            "docs": [
+              "Subject being disputed (subject_id, not Subject PDA)"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "round",
+            "docs": [
+              "Which round this dispute is for"
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "status",
+            "docs": [
+              "Dispute status"
+            ],
+            "type": {
+              "defined": {
+                "name": "DisputeStatus"
+              }
+            }
+          },
+          {
+            "name": "dispute_type",
+            "docs": [
+              "Dispute type"
+            ],
+            "type": {
+              "defined": {
+                "name": "DisputeType"
+              }
+            }
+          },
+          {
+            "name": "total_stake",
+            "docs": [
+              "Total stake from all challengers"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "challenger_count",
+            "docs": [
+              "Number of challengers"
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "bond_at_risk",
+            "docs": [
+              "Bond at risk (calculated based on mode)",
+              "Match: min(total_stake, available_bond)",
+              "Prop: available_bond"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "defender_count",
+            "docs": [
+              "Number of defenders (snapshot at dispute creation, updated if new defenders join)"
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "votes_for_challenger",
+            "docs": [
+              "Cumulative voting power for challenger"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "votes_for_defender",
+            "docs": [
+              "Cumulative voting power for defender"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "vote_count",
+            "docs": [
+              "Number of jurors who voted"
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "voting_starts_at",
+            "docs": [
+              "Voting start timestamp"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "voting_ends_at",
+            "docs": [
+              "Voting end timestamp"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "outcome",
+            "docs": [
+              "Resolution outcome"
+            ],
+            "type": {
+              "defined": {
+                "name": "ResolutionOutcome"
+              }
+            }
+          },
+          {
+            "name": "resolved_at",
+            "docs": [
+              "Resolution timestamp"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "is_restore",
+            "docs": [
+              "True if this dispute is a restoration request"
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "restore_stake",
+            "docs": [
+              "Stake posted by restorer (for restorations only)"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "restorer",
+            "docs": [
+              "Restorer's pubkey (for restorations only)"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "details_cid",
+            "docs": [
+              "Details CID (IPFS hash for dispute details)"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "Bump seed for PDA"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "created_at",
+            "docs": [
+              "Creation timestamp"
+            ],
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "DisputeCreatedEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "subject_id",
+            "type": "pubkey"
+          },
+          {
+            "name": "round",
+            "type": "u32"
+          },
+          {
+            "name": "creator",
+            "type": "pubkey"
+          },
+          {
+            "name": "stake",
+            "type": "u64"
+          },
+          {
+            "name": "bond_at_risk",
+            "type": "u64"
+          },
+          {
+            "name": "voting_ends_at",
+            "type": "i64"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "DisputeResolvedEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "subject_id",
+            "type": "pubkey"
+          },
+          {
+            "name": "round",
+            "type": "u32"
+          },
+          {
+            "name": "outcome",
+            "type": {
+              "defined": {
+                "name": "ResolutionOutcome"
+              }
+            }
+          },
+          {
+            "name": "total_stake",
+            "type": "u64"
+          },
+          {
+            "name": "bond_at_risk",
+            "type": "u64"
+          },
+          {
+            "name": "winner_pool",
+            "type": "u64"
+          },
+          {
+            "name": "juror_pool",
+            "type": "u64"
+          },
+          {
+            "name": "resolved_at",
+            "type": "i64"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "DisputeStatus",
+      "docs": [
+        "Dispute status"
+      ],
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "None"
+          },
+          {
+            "name": "Pending"
+          },
+          {
+            "name": "Resolved"
+          }
+        ]
+      }
+    },
+    {
+      "name": "DisputeType",
+      "docs": [
+        "Dispute type (generic categories)"
+      ],
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Other"
+          },
+          {
+            "name": "Breach"
+          },
+          {
+            "name": "Fraud"
+          },
+          {
+            "name": "QualityDispute"
+          },
+          {
+            "name": "NonDelivery"
+          },
+          {
+            "name": "Misrepresentation"
+          },
+          {
+            "name": "PolicyViolation"
+          },
+          {
+            "name": "DamagesClaim"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Escrow",
+      "docs": [
+        "Escrow account - holds funds for claims across rounds",
+        "Seeds: [ESCROW_SEED, subject_id]",
+        "Persistent PDA - created once, reused"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "subject_id",
+            "docs": [
+              "Subject this escrow belongs to"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "balance",
+            "docs": [
+              "Current balance available for claims"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "rounds",
+            "docs": [
+              "Historical round results for claims",
+              "Vec grows with realloc on dispute creation, shrinks on last claim"
+            ],
+            "type": {
+              "vec": {
+                "defined": {
+                  "name": "RoundResult"
+                }
+              }
+            }
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "Bump seed for PDA"
+            ],
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "JurorPool",
+      "docs": [
+        "Juror's pool for holding voting stake",
+        "Seeds: [JUROR_POOL_SEED, owner]",
+        "One per user, persistent"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "owner",
+            "docs": [
+              "Juror's wallet address"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "balance",
+            "docs": [
+              "Available balance"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "reputation",
+            "docs": [
+              "Reputation score (6 decimals, 100% = 100_000_000)"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "Bump seed for PDA"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "created_at",
+            "docs": [
+              "Registration timestamp"
+            ],
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "JurorRecord",
+      "docs": [
+        "Juror's vote record for a specific subject round",
+        "Seeds: [JUROR_RECORD_SEED, subject_id, juror, round]",
+        "Created per round, closed after claim"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "subject_id",
+            "docs": [
+              "The subject_id this record belongs to"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "juror",
+            "docs": [
+              "Juror who cast the vote"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "round",
+            "docs": [
+              "Which round this vote is for"
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "choice",
+            "docs": [
+              "Vote choice for regular disputes"
+            ],
+            "type": {
+              "defined": {
+                "name": "VoteChoice"
+              }
+            }
+          },
+          {
+            "name": "restore_choice",
+            "docs": [
+              "Vote choice for restorations (only used when is_restore_vote is true)"
+            ],
+            "type": {
+              "defined": {
+                "name": "RestoreVoteChoice"
+              }
+            }
+          },
+          {
+            "name": "is_restore_vote",
+            "docs": [
+              "Whether this is a restoration vote"
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "voting_power",
+            "docs": [
+              "Calculated voting power"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "stake_allocation",
+            "docs": [
+              "Stake allocated (locked from juror pool)"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "reward_claimed",
+            "docs": [
+              "Whether reward has been claimed"
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "stake_unlocked",
+            "docs": [
+              "Whether stake has been unlocked (7 days after voting ends)"
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "Bump seed for PDA"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "voted_at",
+            "docs": [
+              "Vote timestamp"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "rationale_cid",
+            "docs": [
+              "IPFS CID for vote rationale (optional)"
+            ],
+            "type": "string"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PoolDepositEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "pool_type",
+            "type": {
+              "defined": {
+                "name": "PoolType"
+              }
+            }
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PoolType",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Defender"
+          },
+          {
+            "name": "Challenger"
+          },
+          {
+            "name": "Juror"
+          }
+        ]
+      }
+    },
+    {
+      "name": "PoolWithdrawEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "pool_type",
+            "type": {
+              "defined": {
+                "name": "PoolType"
+              }
+            }
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "slashed",
+            "type": "u64"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ProtocolConfig",
+      "docs": [
+        "Protocol-wide configuration account",
+        "Stores treasury address and admin authority for fee collection"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "authority",
+            "docs": [
+              "Admin who can update config (deployer initially)"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "treasury",
+            "docs": [
+              "Platform fee recipient address"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "PDA bump seed"
+            ],
+            "type": "u8"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RecordClosedEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "subject_id",
+            "type": "pubkey"
+          },
+          {
+            "name": "round",
+            "type": "u32"
+          },
+          {
+            "name": "owner",
+            "type": "pubkey"
+          },
+          {
+            "name": "role",
+            "type": {
+              "defined": {
+                "name": "ClaimRole"
+              }
+            }
+          },
+          {
+            "name": "rent_returned",
+            "type": "u64"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ResolutionOutcome",
+      "docs": [
+        "Resolution outcome"
+      ],
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "None"
+          },
+          {
+            "name": "ChallengerWins"
+          },
+          {
+            "name": "DefenderWins"
+          },
+          {
+            "name": "NoParticipation"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RestoreResolvedEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "subject_id",
+            "type": "pubkey"
+          },
+          {
+            "name": "round",
+            "type": "u32"
+          },
+          {
+            "name": "outcome",
+            "type": {
+              "defined": {
+                "name": "ResolutionOutcome"
+              }
+            }
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RestoreSubmittedEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "subject_id",
+            "type": "pubkey"
+          },
+          {
+            "name": "round",
+            "type": "u32"
+          },
+          {
+            "name": "restorer",
+            "type": "pubkey"
+          },
+          {
+            "name": "stake",
+            "type": "u64"
+          },
+          {
+            "name": "details_cid",
+            "type": "string"
+          },
+          {
+            "name": "voting_period",
+            "type": "i64"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RestoreVoteChoice",
+      "docs": [
+        "Vote choice for restorations"
+      ],
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "ForRestoration"
+          },
+          {
+            "name": "AgainstRestoration"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RestoreVoteEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "subject_id",
+            "type": "pubkey"
+          },
+          {
+            "name": "round",
+            "type": "u32"
+          },
+          {
+            "name": "juror",
+            "type": "pubkey"
+          },
+          {
+            "name": "choice",
+            "type": {
+              "defined": {
+                "name": "RestoreVoteChoice"
+              }
+            }
+          },
+          {
+            "name": "voting_power",
+            "type": "u64"
+          },
+          {
+            "name": "rationale_cid",
+            "type": "string"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RewardClaimedEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "subject_id",
+            "type": "pubkey"
+          },
+          {
+            "name": "round",
+            "type": "u32"
+          },
+          {
+            "name": "claimer",
+            "type": "pubkey"
+          },
+          {
+            "name": "role",
+            "type": {
+              "defined": {
+                "name": "ClaimRole"
+              }
+            }
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RoundResult",
+      "docs": [
+        "Result data for a completed round, stored in Escrow",
+        "Used for claim calculations after resolution"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "round",
+            "docs": [
+              "Round number"
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "creator",
+            "docs": [
+              "Dispute creator (for rent refund on last claim or sweep)"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "resolved_at",
+            "docs": [
+              "Resolution timestamp (for grace period calculation)"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "outcome",
+            "docs": [
+              "Resolution outcome"
+            ],
+            "type": {
+              "defined": {
+                "name": "ResolutionOutcome"
+              }
+            }
+          },
+          {
+            "name": "total_stake",
+            "docs": [
+              "Total stake from challengers"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "bond_at_risk",
+            "docs": [
+              "Bond at risk from defenders"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "safe_bond",
+            "docs": [
+              "Safe bond (available_bond - bond_at_risk) returned to defenders"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "total_vote_weight",
+            "docs": [
+              "Total voting power cast"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "winner_pool",
+            "docs": [
+              "Winner pool amount (80%)"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "juror_pool",
+            "docs": [
+              "Juror pool amount (19%)"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "defender_count",
+            "docs": [
+              "Number of defenders"
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "challenger_count",
+            "docs": [
+              "Number of challengers"
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "juror_count",
+            "docs": [
+              "Number of jurors"
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "defender_claims",
+            "docs": [
+              "Number of defenders who have claimed"
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "challenger_claims",
+            "docs": [
+              "Number of challengers who have claimed"
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "juror_claims",
+            "docs": [
+              "Number of jurors who have claimed"
+            ],
+            "type": "u16"
+          }
+        ]
+      }
+    },
+    {
+      "name": "RoundSweptEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "subject_id",
+            "type": "pubkey"
+          },
+          {
+            "name": "round",
+            "type": "u32"
+          },
+          {
+            "name": "sweeper",
+            "type": "pubkey"
+          },
+          {
+            "name": "unclaimed",
+            "type": "u64"
+          },
+          {
+            "name": "bot_reward",
+            "type": "u64"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "StakeUnlockedEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "subject_id",
+            "type": "pubkey"
+          },
+          {
+            "name": "round",
+            "type": "u32"
+          },
+          {
+            "name": "juror",
+            "type": "pubkey"
+          },
+          {
+            "name": "amount",
+            "type": "u64"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Subject",
+      "docs": [
+        "Subject that defenders back - identified by subject_id",
+        "Persistent PDA - created once, reused across rounds"
+      ],
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "subject_id",
+            "docs": [
+              "Subject identifier (could be PDA from external program)"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "creator",
+            "docs": [
+              "Creator of this subject (for auto-bond on reset)"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "details_cid",
+            "docs": [
+              "Content CID (IPFS hash for subject details)"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "round",
+            "docs": [
+              "Current round counter (0, 1, 2, ...)"
+            ],
+            "type": "u32"
+          },
+          {
+            "name": "available_bond",
+            "docs": [
+              "Total bond available for current round"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "defender_count",
+            "docs": [
+              "Number of defenders in current round"
+            ],
+            "type": "u16"
+          },
+          {
+            "name": "status",
+            "docs": [
+              "Current status"
+            ],
+            "type": {
+              "defined": {
+                "name": "SubjectStatus"
+              }
+            }
+          },
+          {
+            "name": "match_mode",
+            "docs": [
+              "Match mode: true = bond_at_risk matches stake, false = proportionate (all bond at risk)"
+            ],
+            "type": "bool"
+          },
+          {
+            "name": "voting_period",
+            "docs": [
+              "Voting period in seconds for this subject's disputes"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "dispute",
+            "docs": [
+              "Current active dispute (if any)"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "bump",
+            "docs": [
+              "Bump seed for PDA"
+            ],
+            "type": "u8"
+          },
+          {
+            "name": "created_at",
+            "docs": [
+              "Creation timestamp"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "updated_at",
+            "docs": [
+              "Last update timestamp"
+            ],
+            "type": "i64"
+          },
+          {
+            "name": "last_dispute_total",
+            "docs": [
+              "Previous dispute's (stake + bond) - minimum stake required for restoration"
+            ],
+            "type": "u64"
+          },
+          {
+            "name": "last_voting_period",
+            "docs": [
+              "Previous dispute's voting period - restorations use 2x this value"
+            ],
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "SubjectCreatedEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "subject_id",
+            "type": "pubkey"
+          },
+          {
+            "name": "creator",
+            "type": "pubkey"
+          },
+          {
+            "name": "match_mode",
+            "type": "bool"
+          },
+          {
+            "name": "voting_period",
+            "type": "i64"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "SubjectStatus",
+      "docs": [
+        "Subject status"
+      ],
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Dormant"
+          },
+          {
+            "name": "Valid"
+          },
+          {
+            "name": "Disputed"
+          },
+          {
+            "name": "Invalid"
+          },
+          {
+            "name": "Restoring"
+          }
+        ]
+      }
+    },
+    {
+      "name": "SubjectStatusChangedEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "subject_id",
+            "type": "pubkey"
+          },
+          {
+            "name": "old_status",
+            "type": "u8"
+          },
+          {
+            "name": "new_status",
+            "type": "u8"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    },
+    {
+      "name": "VoteChoice",
+      "docs": [
+        "Vote choice for disputes"
+      ],
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "ForChallenger"
+          },
+          {
+            "name": "ForDefender"
+          }
+        ]
+      }
+    },
+    {
+      "name": "VoteEvent",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "subject_id",
+            "type": "pubkey"
+          },
+          {
+            "name": "round",
+            "type": "u32"
+          },
+          {
+            "name": "juror",
+            "type": "pubkey"
+          },
+          {
+            "name": "choice",
+            "type": {
+              "defined": {
+                "name": "VoteChoice"
+              }
+            }
+          },
+          {
+            "name": "voting_power",
+            "type": "u64"
+          },
+          {
+            "name": "rationale_cid",
+            "type": "string"
+          },
+          {
+            "name": "timestamp",
+            "type": "i64"
+          }
+        ]
+      }
+    }
+  ]
+}
