@@ -64,6 +64,7 @@ export {
   PROGRAM_ID,
   // PDA Seeds
   PROTOCOL_CONFIG_SEED,
+  PROGRAM_DELEGATE_SEED,
   DEFENDER_POOL_SEED,
   CHALLENGER_POOL_SEED,
   JUROR_POOL_SEED,
@@ -101,6 +102,8 @@ export {
   integerSqrt,
   calculateMinBond,
   formatReputation,
+  // Open Access Helpers
+  getProgramDelegatePDA,
 } from "./constants";
 
 // Reward Calculations

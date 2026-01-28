@@ -2,11 +2,13 @@ import { PublicKey } from "@solana/web3.js";
 
 // Program ID
 export const PROGRAM_ID = new PublicKey(
-  "YxF3CEwUr5Nhk8FjzZDhKFcSHfgRHYA31Ccm3vd2Mrz"
+  "FdwM2WpqifAkVecKptpZc99Ao1cgnu9U12L7KvDVS1Kd"
 );
 
 // PDA Seeds
 export const PROTOCOL_CONFIG_SEED = Buffer.from("protocol_config");
+export const PROGRAM_DELEGATE_SEED = Buffer.from("program_delegate");
+export const TREASURY_SEED = Buffer.from("treasury");
 export const DEFENDER_POOL_SEED = Buffer.from("defender_pool");
 export const CHALLENGER_POOL_SEED = Buffer.from("challenger_pool");
 export const JUROR_POOL_SEED = Buffer.from("juror_pool");
@@ -104,4 +106,18 @@ export function calculateMinBond(reputation: number, baseBond: number = BASE_CHA
  */
 export function formatReputation(reputation: number): string {
   return `${(reputation / REP_PRECISION).toFixed(1)}%`;
+}
+
+/**
+ * Get the program delegate PDA address
+ * When a namespace's delegate is set to this PDA, anyone can create subjects (open access)
+ * This is useful for platforms that want permissionless subject creation
+ * @returns The program delegate PDA public key
+ */
+export function getProgramDelegatePDA(): PublicKey {
+  const [pda] = PublicKey.findProgramAddressSync(
+    [PROGRAM_DELEGATE_SEED],
+    PROGRAM_ID
+  );
+  return pda;
 }

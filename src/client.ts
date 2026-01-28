@@ -386,27 +386,59 @@ export class ScaleCraftClient {
   // ===========================================================================
 
   /**
-   * Initialize protocol config (one-time setup by deployer)
+   * Initialize protocol config for an implementer with unique namespace
+   * @param namespace - Unique implementer identifier (max 32 chars)
+   * @param minParticipation - Minimum bond/stake for defenders and challengers (in lamports)
    */
-  async initializeConfig(): Promise<TransactionResult> {
+  async initializeConfig(
+    namespace: string,
+    minParticipation: BN
+  ): Promise<TransactionResult> {
     const { program } = this.getWalletAndProgram();
-    const [protocolConfig] = this.pda.protocolConfig();
+    const [protocolConfig] = this.pda.protocolConfig(namespace);
 
+    // Anchor auto-derives config PDA from namespace argument
     const signature = await program.methods
-      .initializeConfig()
+      .initializeConfig(namespace, minParticipation)
       .rpc();
 
     return { signature, accounts: { protocolConfig } };
   }
 
   /**
-   * Update treasury address (admin only)
+   * Set or revoke delegate (authority only)
+   * Delegate can create subjects on behalf of the authority
+   * @param namespace - Namespace of the config to update
+   * @param newDelegate - New delegate address (use PublicKey.default() to revoke)
    */
-  async updateTreasury(newTreasury: PublicKey): Promise<TransactionResult> {
+  async setDelegate(namespace: string, newDelegate: PublicKey): Promise<TransactionResult> {
     const { program } = this.getWalletAndProgram();
+    const [config] = this.pda.protocolConfig(namespace);
 
     const signature = await program.methods
-      .updateTreasury(newTreasury)
+      .setDelegate(newDelegate)
+      .accountsPartial({
+        config,
+      })
+      .rpc();
+
+    return { signature };
+  }
+
+  /**
+   * Update protocol config settings (admin only)
+   * @param namespace - Namespace of the config to update
+   * @param minParticipation - New minimum participation amount (in lamports)
+   */
+  async updateConfig(namespace: string, minParticipation: BN): Promise<TransactionResult> {
+    const { program } = this.getWalletAndProgram();
+    const [config] = this.pda.protocolConfig(namespace);
+
+    const signature = await program.methods
+      .updateConfig(minParticipation)
+      .accountsPartial({
+        config,
+      })
       .rpc();
 
     return { signature };
@@ -475,22 +507,31 @@ export class ScaleCraftClient {
 
   /**
    * Create a subject with its associated Dispute and Escrow accounts
-   * Creator's pool is linked automatically. If initialBond > 0, transfers from wallet.
-   * Subject starts as Valid if pool.balance > 0 or initialBond > 0.
+   * Creator's pool is linked automatically. If initialBond > 0, transfers from creator's wallet.
+   * Subject starts as Valid if pool.balance >= config.minParticipation or initialBond >= config.minParticipation.
+   * @param params.namespace - Protocol config namespace this subject belongs to
+   * @param params.payer - Optional payer for account rent (defaults to creator/wallet)
    */
   async createSubject(params: {
+    namespace: string;
     subjectId: PublicKey;
     detailsCid: string;
     matchMode?: boolean;
     votingPeriod: BN;
     initialBond?: BN;
+    /** Optional payer for account rent (defaults to wallet/creator) */
+    payer?: PublicKey;
   }): Promise<TransactionResult> {
     const { wallet, program } = this.getWalletAndProgram();
+    const [config] = this.pda.protocolConfig(params.namespace);
     const [subject] = this.pda.subject(params.subjectId);
     const [dispute] = this.pda.dispute(params.subjectId);
     const [escrow] = this.pda.escrow(params.subjectId);
     const [defenderPool] = this.pda.defenderPool(wallet.publicKey);
     const [defenderRecord] = this.pda.defenderRecord(params.subjectId, wallet.publicKey, 0);
+
+    // Payer defaults to creator (wallet) if not specified
+    const payer = params.payer ?? wallet.publicKey;
 
     const signature = await program.methods
       .createSubject(
@@ -501,13 +542,15 @@ export class ScaleCraftClient {
         params.initialBond ?? new BN(0)
       )
       .accountsPartial({
+        payer,
         creator: wallet.publicKey,
+        config,
         subject,
         dispute,
         escrow,
         defenderPool,
         defenderRecord,
-      })
+      } as any)
       .rpc();
 
     return { signature, accounts: { subject, dispute, escrow, defenderPool, defenderRecord } };
@@ -537,6 +580,7 @@ export class ScaleCraftClient {
       .addBondDirect(amount)
       .accountsPartial({
         defender: wallet.publicKey,
+        config: subject.config,
         subject: subjectPda,
         defenderRecord,
         defenderPool,
@@ -569,6 +613,7 @@ export class ScaleCraftClient {
       .addBondFromPool(amount)
       .accountsPartial({
         defender: wallet.publicKey,
+        config: subject.config,
         subject: subjectPda,
         defenderPool,
         defenderRecord,
@@ -686,6 +731,7 @@ export class ScaleCraftClient {
    * Create a new dispute against a subject
    * This initiates the dispute and creates a ChallengerRecord for the caller
    * Auto-pulls min(pool.balance, max_bond) from creator's defender pool
+   * Stake must be >= config.minParticipation
    */
   async createDispute(params: {
     subjectId: PublicKey;
@@ -719,6 +765,7 @@ export class ScaleCraftClient {
       .createDispute(params.disputeType, params.detailsCid, params.stake)
       .accountsPartial({
         challenger: wallet.publicKey,
+        config: subject.config,
         subject: subjectPda,
         dispute: disputePda,
         escrow: escrowPda,
@@ -735,6 +782,7 @@ export class ScaleCraftClient {
 
   /**
    * Join an existing dispute as additional challenger
+   * Stake must be >= config.minParticipation
    */
   async joinChallengers(params: {
     subjectId: PublicKey;
@@ -758,6 +806,7 @@ export class ScaleCraftClient {
       .joinChallengers(params.detailsCid, params.stake)
       .accountsPartial({
         challenger: wallet.publicKey,
+        config: subject.config,
         subject: subjectPda,
         dispute: disputePda,
         challengerRecord,
@@ -948,15 +997,14 @@ export class ScaleCraftClient {
     const [subjectPda] = this.pda.subject(params.subjectId);
     const [disputePda] = this.pda.dispute(params.subjectId);
     const [escrowPda] = this.pda.escrow(params.subjectId);
-    const [protocolConfigPda] = this.pda.protocolConfig();
-
-    // Fetch protocol config to get treasury address
-    const protocolConfig = await program.account.protocolConfig.fetch(protocolConfigPda);
 
     // Fetch subject to get creator and current round for auto-rebond
     const subject = await program.account.subject.fetch(subjectPda);
     const creator = subject.creator;
     const nextRound = subject.round + 1; // After reset_for_next_round, round will be incremented
+
+    // Get global treasury PDA
+    const [treasuryPda] = this.pda.treasury();
 
     // Check if creator has a defender pool
     const [creatorDefenderPoolPda] = this.pda.defenderPool(creator);
@@ -981,8 +1029,7 @@ export class ScaleCraftClient {
         subject: subjectPda,
         dispute: disputePda,
         escrow: escrowPda,
-        protocolConfig: protocolConfigPda,
-        treasury: protocolConfig.treasury,
+        treasury: treasuryPda,
         creatorDefenderPool,
         creatorDefenderRecord,
       });
@@ -1000,10 +1047,20 @@ export class ScaleCraftClient {
     round: number;
   }): Promise<TransactionResult> {
     const { wallet, program } = this.getWalletAndProgram();
+    const [subjectPda] = this.pda.subject(params.subjectId);
+    const [escrowPda] = this.pda.escrow(params.subjectId);
     const [jurorPool] = this.pda.jurorPool(wallet.publicKey);
     const [jurorRecord] = this.pda.jurorRecord(params.subjectId, wallet.publicKey, params.round);
 
-    const method = program.methods.claimJuror(params.round);
+    const method = program.methods
+      .claimJuror(params.round)
+      .accountsPartial({
+        juror: wallet.publicKey,
+        subject: subjectPda,
+        escrow: escrowPda,
+        jurorRecord,
+        jurorPool,
+      });
 
     const signature = await this.rpcWithSimulation(method, "claimJuror", true);
 
@@ -1047,10 +1104,20 @@ export class ScaleCraftClient {
     round: number;
   }): Promise<TransactionResult> {
     const { wallet, program } = this.getWalletAndProgram();
+    const [subjectPda] = this.pda.subject(params.subjectId);
+    const [escrowPda] = this.pda.escrow(params.subjectId);
     const [challengerPool] = this.pda.challengerPool(wallet.publicKey);
     const [challengerRecord] = this.pda.challengerRecord(params.subjectId, wallet.publicKey, params.round);
 
-    const method = program.methods.claimChallenger(params.round);
+    const method = program.methods
+      .claimChallenger(params.round)
+      .accountsPartial({
+        challenger: wallet.publicKey,
+        subject: subjectPda,
+        escrow: escrowPda,
+        challengerRecord,
+        challengerPool,
+      });
 
     const signature = await this.rpcWithSimulation(method, "claimChallenger", true);
 
@@ -1065,10 +1132,20 @@ export class ScaleCraftClient {
     round: number;
   }): Promise<TransactionResult> {
     const { wallet, program } = this.getWalletAndProgram();
+    const [subjectPda] = this.pda.subject(params.subjectId);
+    const [escrowPda] = this.pda.escrow(params.subjectId);
     const [defenderPool] = this.pda.defenderPool(wallet.publicKey);
     const [defenderRecord] = this.pda.defenderRecord(params.subjectId, wallet.publicKey, params.round);
 
-    const method = program.methods.claimDefender(params.round);
+    const method = program.methods
+      .claimDefender(params.round)
+      .accountsPartial({
+        defender: wallet.publicKey,
+        subject: subjectPda,
+        escrow: escrowPda,
+        defenderRecord,
+        defenderPool,
+      });
 
     const signature = await this.rpcWithSimulation(method, "claimDefender", true);
 
@@ -1208,10 +1285,18 @@ export class ScaleCraftClient {
     round: number;
   }): Promise<TransactionResult> {
     const { wallet, program } = this.getWalletAndProgram();
+    const [subjectPda] = this.pda.subject(params.subjectId);
+    const [escrowPda] = this.pda.escrow(params.subjectId);
     const [jurorRecord] = this.pda.jurorRecord(params.subjectId, wallet.publicKey, params.round);
 
     const signature = await program.methods
       .closeJurorRecord(params.round)
+      .accountsPartial({
+        juror: wallet.publicKey,
+        subject: subjectPda,
+        escrow: escrowPda,
+        jurorRecord,
+      })
       .rpc();
 
     return { signature };
@@ -1225,10 +1310,18 @@ export class ScaleCraftClient {
     round: number;
   }): Promise<TransactionResult> {
     const { wallet, program } = this.getWalletAndProgram();
+    const [subjectPda] = this.pda.subject(params.subjectId);
+    const [escrowPda] = this.pda.escrow(params.subjectId);
     const [challengerRecord] = this.pda.challengerRecord(params.subjectId, wallet.publicKey, params.round);
 
     const signature = await program.methods
       .closeChallengerRecord(params.round)
+      .accountsPartial({
+        challenger: wallet.publicKey,
+        subject: subjectPda,
+        escrow: escrowPda,
+        challengerRecord,
+      })
       .rpc();
 
     return { signature };
@@ -1242,10 +1335,18 @@ export class ScaleCraftClient {
     round: number;
   }): Promise<TransactionResult> {
     const { wallet, program } = this.getWalletAndProgram();
+    const [subjectPda] = this.pda.subject(params.subjectId);
+    const [escrowPda] = this.pda.escrow(params.subjectId);
     const [defenderRecord] = this.pda.defenderRecord(params.subjectId, wallet.publicKey, params.round);
 
     const signature = await program.methods
       .closeDefenderRecord(params.round)
+      .accountsPartial({
+        defender: wallet.publicKey,
+        subject: subjectPda,
+        escrow: escrowPda,
+        defenderRecord,
+      })
       .rpc();
 
     return { signature };
@@ -1343,10 +1444,11 @@ export class ScaleCraftClient {
   // ===========================================================================
 
   /**
-   * Fetch protocol config
+   * Fetch protocol config by namespace
+   * @param namespace - Namespace of the config to fetch
    */
-  async fetchProtocolConfig(): Promise<ProtocolConfig | null> {
-    const [address] = this.pda.protocolConfig();
+  async fetchProtocolConfig(namespace: string): Promise<ProtocolConfig | null> {
+    const [address] = this.pda.protocolConfig(namespace);
     try {
       return (await this.anchorProgram.account.protocolConfig.fetch(
         address

@@ -27,7 +27,9 @@ export interface UserActivity {
 
 export interface ProtocolConfig {
   authority: PublicKey;
-  treasury: PublicKey;
+  delegate: PublicKey;
+  namespace: string;
+  minParticipation: BN;
   bump: number;
 }
 
@@ -62,6 +64,7 @@ export interface JurorPool {
 
 export interface Subject {
   subjectId: PublicKey;
+  config: PublicKey;
   creator: PublicKey;
   detailsCid: string;
   round: number;

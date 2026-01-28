@@ -2,10 +2,10 @@
  * Program IDL in camelCase format in order to be used in JS/TS.
  *
  * Note that this is only a type helper and is not the actual IDL. The original
- * IDL can be found at `target/idl/tribunalcraft.json`.
+ * IDL can be found at `target/idl/scalecraft.json`.
  */
 export type Scalecraft = {
-  "address": "YxF3CEwUr5Nhk8FjzZDhKFcSHfgRHYA31Ccm3vd2Mrz",
+  "address": "FdwM2WpqifAkVecKptpZc99Ao1cgnu9U12L7KvDVS1Kd",
   "metadata": {
     "name": "scalecraft",
     "version": "0.1.0",
@@ -33,6 +33,41 @@ export type Scalecraft = {
           "name": "defender",
           "writable": true,
           "signer": true
+        },
+        {
+          "name": "config",
+          "docs": [
+            "Protocol config (for min_participation threshold)"
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "config.namespace",
+                "account": "protocolConfig"
+              }
+            ]
+          }
         },
         {
           "name": "subject",
@@ -174,6 +209,41 @@ export type Scalecraft = {
           "name": "defender",
           "writable": true,
           "signer": true
+        },
+        {
+          "name": "config",
+          "docs": [
+            "Protocol config (for min_participation threshold)"
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "config.namespace",
+                "account": "protocolConfig"
+              }
+            ]
+          }
         },
         {
           "name": "subject",
@@ -1473,6 +1543,41 @@ export type Scalecraft = {
           "signer": true
         },
         {
+          "name": "config",
+          "docs": [
+            "Protocol config (for min_participation check)"
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "config.namespace",
+                "account": "protocolConfig"
+              }
+            ]
+          }
+        },
+        {
           "name": "subject",
           "writable": true,
           "pda": {
@@ -1752,6 +1857,42 @@ export type Scalecraft = {
           "signer": true
         },
         {
+          "name": "config",
+          "docs": [
+            "Protocol config (determines min_participation threshold)",
+            "Only the namespace authority or delegate can create subjects"
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "config.namespace",
+                "account": "protocolConfig"
+              }
+            ]
+          }
+        },
+        {
           "name": "subject",
           "writable": true,
           "pda": {
@@ -1997,7 +2138,7 @@ export type Scalecraft = {
     {
       "name": "initializeConfig",
       "docs": [
-        "Initialize protocol config (one-time setup by deployer)"
+        "Initialize protocol config for an implementer with unique namespace"
       ],
       "discriminator": [
         208,
@@ -2039,6 +2180,10 @@ export type Scalecraft = {
                   105,
                   103
                 ]
+              },
+              {
+                "kind": "arg",
+                "path": "namespace"
               }
             ]
           }
@@ -2048,7 +2193,16 @@ export type Scalecraft = {
           "address": "11111111111111111111111111111111"
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "namespace",
+          "type": "string"
+        },
+        {
+          "name": "minParticipation",
+          "type": "u64"
+        }
+      ]
     },
     {
       "name": "joinChallengers",
@@ -2070,6 +2224,41 @@ export type Scalecraft = {
           "name": "challenger",
           "writable": true,
           "signer": true
+        },
+        {
+          "name": "config",
+          "docs": [
+            "Protocol config (for min_participation check)"
+          ],
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "config.namespace",
+                "account": "protocolConfig"
+              }
+            ]
+          }
         },
         {
           "name": "subject",
@@ -2437,10 +2626,124 @@ export type Scalecraft = {
           }
         },
         {
-          "name": "protocolConfig",
+          "name": "treasury",
           "docs": [
-            "Protocol config for treasury address"
+            "Global treasury PDA receives platform fee"
           ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  116,
+                  114,
+                  101,
+                  97,
+                  115,
+                  117,
+                  114,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "creatorDefenderPool",
+          "docs": [
+            "Optional: Creator's defender pool to check for auto-rebond"
+          ],
+          "writable": true,
+          "optional": true
+        },
+        {
+          "name": "creatorDefenderRecord",
+          "docs": [
+            "Optional: Creator's defender record - initialized via init_if_needed",
+            "Uses subject.creator and next_round for PDA seeds"
+          ],
+          "writable": true,
+          "optional": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  100,
+                  101,
+                  102,
+                  101,
+                  110,
+                  100,
+                  101,
+                  114,
+                  95,
+                  114,
+                  101,
+                  99,
+                  111,
+                  114,
+                  100
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "subject.subject_id",
+                "account": "subject"
+              },
+              {
+                "kind": "account",
+                "path": "subject.creator",
+                "account": "subject"
+              },
+              {
+                "kind": "arg",
+                "path": "nextRound"
+              }
+            ]
+          }
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "nextRound",
+          "type": "u32"
+        }
+      ]
+    },
+    {
+      "name": "setDelegate",
+      "docs": [
+        "Set or revoke delegate (authority only)",
+        "Delegate can create subjects on behalf of the authority"
+      ],
+      "discriminator": [
+        242,
+        30,
+        46,
+        76,
+        108,
+        235,
+        128,
+        181
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "config"
+          ]
+        },
+        {
+          "name": "config",
+          "writable": true,
           "pda": {
             "seeds": [
               {
@@ -2462,65 +2765,20 @@ export type Scalecraft = {
                   105,
                   103
                 ]
-              }
-            ]
-          }
-        },
-        {
-          "name": "treasury",
-          "docs": [
-            "Treasury receives platform fee"
-          ],
-          "writable": true
-        },
-        {
-          "name": "creatorDefenderPool",
-          "docs": [
-            "Optional: Creator's defender pool for auto-rebond on defender win"
-          ],
-          "writable": true,
-          "optional": true
-        },
-        {
-          "name": "creatorDefenderRecord",
-          "docs": [
-            "Optional: Creator's defender record - initialized via init_if_needed",
-            "Uses subject.creator and next_round for PDA seeds"
-          ],
-          "writable": true,
-          "optional": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [100, 101, 102, 101, 110, 100, 101, 114, 95, 114, 101, 99, 111, 114, 100]
               },
               {
                 "kind": "account",
-                "path": "subject.subject_id",
-                "account": "subject"
-              },
-              {
-                "kind": "account",
-                "path": "subject.creator",
-                "account": "subject"
-              },
-              {
-                "kind": "arg",
-                "path": "next_round"
+                "path": "config.namespace",
+                "account": "protocolConfig"
               }
             ]
           }
-        },
-        {
-          "name": "systemProgram",
-          "address": "11111111111111111111111111111111"
         }
       ],
       "args": [
         {
-          "name": "nextRound",
-          "type": "u32"
+          "name": "newDelegate",
+          "type": "pubkey"
         }
       ]
     },
@@ -2801,41 +3059,28 @@ export type Scalecraft = {
           }
         },
         {
-          "name": "protocolConfig",
+          "name": "treasury",
           "docs": [
-            "Protocol config for treasury address"
+            "Global treasury PDA receives swept funds"
           ],
+          "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
                 "value": [
-                  112,
-                  114,
-                  111,
                   116,
-                  111,
-                  99,
-                  111,
-                  108,
-                  95,
-                  99,
-                  111,
-                  110,
-                  102,
-                  105,
-                  103
+                  114,
+                  101,
+                  97,
+                  115,
+                  117,
+                  114,
+                  121
                 ]
               }
             ]
           }
-        },
-        {
-          "name": "treasury",
-          "docs": [
-            "Treasury receives swept funds"
-          ],
-          "writable": true
         },
         {
           "name": "systemProgram",
@@ -3050,6 +3295,71 @@ export type Scalecraft = {
       "args": []
     },
     {
+      "name": "updateConfig",
+      "docs": [
+        "Update protocol config settings (admin only)"
+      ],
+      "discriminator": [
+        29,
+        158,
+        252,
+        191,
+        10,
+        83,
+        219,
+        99
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true,
+          "relations": [
+            "config"
+          ]
+        },
+        {
+          "name": "config",
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  112,
+                  114,
+                  111,
+                  116,
+                  111,
+                  99,
+                  111,
+                  108,
+                  95,
+                  99,
+                  111,
+                  110,
+                  102,
+                  105,
+                  103
+                ]
+              },
+              {
+                "kind": "account",
+                "path": "config.namespace",
+                "account": "protocolConfig"
+              }
+            ]
+          }
+        }
+      ],
+      "args": [
+        {
+          "name": "minParticipation",
+          "type": "u64"
+        }
+      ]
+    },
+    {
       "name": "updateMaxBond",
       "docs": [
         "Update max_bond setting for defender pool"
@@ -3105,66 +3415,6 @@ export type Scalecraft = {
         {
           "name": "newMaxBond",
           "type": "u64"
-        }
-      ]
-    },
-    {
-      "name": "updateTreasury",
-      "docs": [
-        "Update treasury address (admin only)"
-      ],
-      "discriminator": [
-        60,
-        16,
-        243,
-        66,
-        96,
-        59,
-        254,
-        131
-      ],
-      "accounts": [
-        {
-          "name": "authority",
-          "writable": true,
-          "signer": true,
-          "relations": [
-            "config"
-          ]
-        },
-        {
-          "name": "config",
-          "writable": true,
-          "pda": {
-            "seeds": [
-              {
-                "kind": "const",
-                "value": [
-                  112,
-                  114,
-                  111,
-                  116,
-                  111,
-                  99,
-                  111,
-                  108,
-                  95,
-                  99,
-                  111,
-                  110,
-                  102,
-                  105,
-                  103
-                ]
-              }
-            ]
-          }
-        }
-      ],
-      "args": [
-        {
-          "name": "newTreasury",
-          "type": "pubkey"
         }
       ]
     },
@@ -3542,41 +3792,28 @@ export type Scalecraft = {
           }
         },
         {
-          "name": "protocolConfig",
+          "name": "treasury",
           "docs": [
-            "Protocol config for treasury address"
+            "Global treasury PDA receives slashed amounts"
           ],
+          "writable": true,
           "pda": {
             "seeds": [
               {
                 "kind": "const",
                 "value": [
-                  112,
-                  114,
-                  111,
                   116,
-                  111,
-                  99,
-                  111,
-                  108,
-                  95,
-                  99,
-                  111,
-                  110,
-                  102,
-                  105,
-                  103
+                  114,
+                  101,
+                  97,
+                  115,
+                  117,
+                  114,
+                  121
                 ]
               }
             ]
           }
-        },
-        {
-          "name": "treasury",
-          "docs": [
-            "Treasury receives slashed amounts"
-          ],
-          "writable": true
         },
         {
           "name": "systemProgram",
@@ -3700,6 +3937,76 @@ export type Scalecraft = {
               }
             ]
           }
+        },
+        {
+          "name": "systemProgram",
+          "address": "11111111111111111111111111111111"
+        }
+      ],
+      "args": [
+        {
+          "name": "amount",
+          "type": "u64"
+        }
+      ]
+    },
+    {
+      "name": "withdrawTreasury",
+      "docs": [
+        "Withdraw from global treasury (program upgrade authority only)"
+      ],
+      "discriminator": [
+        40,
+        63,
+        122,
+        158,
+        144,
+        216,
+        83,
+        96
+      ],
+      "accounts": [
+        {
+          "name": "authority",
+          "writable": true,
+          "signer": true
+        },
+        {
+          "name": "treasury",
+          "docs": [
+            "Global treasury PDA"
+          ],
+          "writable": true,
+          "pda": {
+            "seeds": [
+              {
+                "kind": "const",
+                "value": [
+                  116,
+                  114,
+                  101,
+                  97,
+                  115,
+                  117,
+                  114,
+                  121
+                ]
+              }
+            ]
+          }
+        },
+        {
+          "name": "destination",
+          "docs": [
+            "Destination for withdrawn funds"
+          ],
+          "writable": true
+        },
+        {
+          "name": "programData",
+          "docs": [
+            "Program data account to verify upgrade authority"
+          ]
         },
         {
           "name": "systemProgram",
@@ -5097,8 +5404,8 @@ export type Scalecraft = {
     {
       "name": "protocolConfig",
       "docs": [
-        "Protocol-wide configuration account",
-        "Stores treasury address and admin authority for fee collection"
+        "Protocol configuration account for an implementer",
+        "Each implementer creates their own config with a unique namespace"
       ],
       "type": {
         "kind": "struct",
@@ -5106,16 +5413,33 @@ export type Scalecraft = {
           {
             "name": "authority",
             "docs": [
-              "Admin who can update config (deployer initially)"
+              "Admin who can update config (cold storage, can set delegate)"
             ],
             "type": "pubkey"
           },
           {
-            "name": "treasury",
+            "name": "delegate",
             "docs": [
-              "Platform fee recipient address"
+              "Delegate who can create subjects (server key, revocable by authority)",
+              "If Pubkey::default(), only authority can create subjects"
             ],
             "type": "pubkey"
+          },
+          {
+            "name": "namespace",
+            "docs": [
+              "Unique namespace identifier for this implementer"
+            ],
+            "type": "string"
+          },
+          {
+            "name": "minParticipation",
+            "docs": [
+              "Minimum participation amount for defenders and challengers (in lamports)",
+              "Subjects with available_bond < min_participation become Dormant",
+              "Challengers must stake at least this amount to participate"
+            ],
+            "type": "u64"
           },
           {
             "name": "bump",
@@ -5544,6 +5868,13 @@ export type Scalecraft = {
             "name": "subjectId",
             "docs": [
               "Subject identifier (could be PDA from external program)"
+            ],
+            "type": "pubkey"
+          },
+          {
+            "name": "config",
+            "docs": [
+              "Protocol config this subject belongs to (for min_participation checks)"
             ],
             "type": "pubkey"
           },

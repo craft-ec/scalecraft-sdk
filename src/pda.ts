@@ -2,6 +2,7 @@ import { PublicKey } from "@solana/web3.js";
 import {
   PROGRAM_ID,
   PROTOCOL_CONFIG_SEED,
+  TREASURY_SEED,
   DEFENDER_POOL_SEED,
   CHALLENGER_POOL_SEED,
   JUROR_POOL_SEED,
@@ -15,17 +16,31 @@ import {
 
 /**
  * PDA derivation helpers for ScaleCraft accounts
- * Updated for V2 round-based design
+ * Updated for V2 round-based design with multi-tenant namespace support
  */
 export class PDA {
   constructor(private programId: PublicKey = PROGRAM_ID) {}
 
   /**
-   * Derive Protocol Config PDA
+   * Derive Protocol Config PDA for a namespace
+   * Seeds: [protocol_config, namespace]
+   * @param namespace - Unique implementer namespace (e.g., "scalecraft")
    */
-  protocolConfig(): [PublicKey, number] {
+  protocolConfig(namespace: string): [PublicKey, number] {
     return PublicKey.findProgramAddressSync(
-      [PROTOCOL_CONFIG_SEED],
+      [PROTOCOL_CONFIG_SEED, Buffer.from(namespace)],
+      this.programId
+    );
+  }
+
+  /**
+   * Derive Global Treasury PDA
+   * Seeds: [treasury]
+   * All protocol fees from all namespaces are sent here
+   */
+  treasury(): [PublicKey, number] {
+    return PublicKey.findProgramAddressSync(
+      [TREASURY_SEED],
       this.programId
     );
   }

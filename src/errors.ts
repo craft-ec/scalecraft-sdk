@@ -10,49 +10,57 @@ import { AnchorError, ProgramError } from "@coral-xyz/anchor";
 const PROGRAM_ERRORS: Record<number, { name: string; message: string }> = {
   6000: { name: "Unauthorized", message: "You are not authorized to perform this action" },
   6001: { name: "InvalidConfig", message: "Invalid configuration parameter" },
+  6002: { name: "InvalidNamespace", message: "Invalid namespace (empty or exceeds max length)" },
+  6003: { name: "BelowMinParticipation", message: "Participation amount below minimum required by config" },
   // Stake errors
-  6002: { name: "StakeBelowMinimum", message: "Stake amount is below the minimum required" },
-  6003: { name: "InsufficientAvailableStake", message: "You don't have enough available stake" },
-  6004: { name: "InsufficientHeldStake", message: "Insufficient held stake for this operation" },
-  6005: { name: "StakeStillLocked", message: "Your stake is still locked (7 days after resolution)" },
-  6006: { name: "StakeAlreadyUnlocked", message: "This stake has already been unlocked" },
+  6004: { name: "StakeBelowMinimum", message: "Stake amount is below the minimum required" },
+  6005: { name: "InsufficientAvailableStake", message: "You don't have enough available stake" },
+  6006: { name: "InsufficientHeldStake", message: "Insufficient held stake for this operation" },
+  6007: { name: "StakeStillLocked", message: "Your stake is still locked (7 days after resolution)" },
+  6008: { name: "StakeAlreadyUnlocked", message: "This stake has already been unlocked" },
   // Bond errors
-  6007: { name: "BondBelowMinimum", message: "Bond amount is below the minimum required" },
-  6008: { name: "BondExceedsAvailable", message: "Bond amount exceeds your available stake" },
+  6009: { name: "BondBelowMinimum", message: "Bond amount is below the minimum required" },
+  6010: { name: "BondExceedsAvailable", message: "Bond amount exceeds your available pool balance" },
   // Subject errors
-  6009: { name: "SubjectCannotBeStaked", message: "This subject cannot accept additional stakes" },
-  6010: { name: "SubjectCannotBeDisputed", message: "This subject cannot be disputed at this time" },
-  6011: { name: "SubjectCannotBeRestored", message: "This subject cannot be restored at this time" },
+  6011: { name: "SubjectCannotBeStaked", message: "This subject cannot accept additional stakes" },
+  6012: { name: "SubjectCannotBeDisputed", message: "This subject cannot be disputed at this time" },
+  6013: { name: "SubjectCannotBeRestored", message: "This subject cannot be restored at this time" },
+  6014: { name: "InvalidSubjectStatus", message: "Invalid subject status for this operation" },
+  // Pool errors
+  6015: { name: "InsufficientPoolBalance", message: "Insufficient pool balance" },
   // Restoration errors
-  6012: { name: "RestoreStakeBelowMinimum", message: "Restore stake must match previous dispute total" },
-  6013: { name: "NotARestore", message: "This dispute is not a restoration request" },
+  6016: { name: "RestoreStakeBelowMinimum", message: "Restore stake must match previous dispute total" },
+  6017: { name: "NotARestore", message: "This dispute is not a restoration request" },
   // Dispute errors
-  6014: { name: "CannotSelfDispute", message: "You cannot dispute your own subject" },
-  6015: { name: "DisputeAlreadyExists", message: "A dispute already exists for this subject" },
-  6016: { name: "DisputeNotFound", message: "The dispute was not found" },
-  6017: { name: "DisputeAlreadyResolved", message: "This dispute has already been resolved" },
-  6018: { name: "VotingNotEnded", message: "The voting period has not ended yet" },
-  6019: { name: "VotingEnded", message: "The voting period has already ended" },
+  6018: { name: "CannotSelfDispute", message: "You cannot dispute your own subject" },
+  6019: { name: "DisputeAlreadyExists", message: "A dispute already exists for this subject" },
+  6020: { name: "DisputeNotFound", message: "The dispute was not found" },
+  6021: { name: "DisputeAlreadyResolved", message: "This dispute has already been resolved" },
+  6022: { name: "VotingNotEnded", message: "The voting period has not ended yet" },
+  6023: { name: "VotingEnded", message: "The voting period has already ended" },
   // Vote errors
-  6020: { name: "CannotVoteOnOwnDispute", message: "You cannot vote on your own dispute" },
-  6021: { name: "AlreadyVoted", message: "You have already voted on this dispute" },
-  6022: { name: "VoteAllocationBelowMinimum", message: "Vote stake allocation is below the minimum" },
-  6023: { name: "InvalidVoteChoice", message: "Invalid vote choice" },
+  6024: { name: "CannotVoteOnOwnDispute", message: "You cannot vote on your own dispute" },
+  6025: { name: "AlreadyVoted", message: "You have already voted on this dispute" },
+  6026: { name: "VoteAllocationBelowMinimum", message: "Vote stake allocation is below the minimum" },
+  6027: { name: "InvalidVoteChoice", message: "Invalid vote choice" },
+  6028: { name: "InvalidRound", message: "Invalid round number" },
   // Juror errors
-  6024: { name: "JurorNotActive", message: "You must be an active juror to perform this action" },
-  6025: { name: "JurorAlreadyRegistered", message: "You are already registered as a juror" },
+  6029: { name: "JurorNotActive", message: "You must be an active juror to perform this action" },
+  6030: { name: "JurorAlreadyRegistered", message: "You are already registered as a juror" },
   // Challenger errors
-  6026: { name: "ChallengerNotFound", message: "Challenger record not found" },
+  6031: { name: "ChallengerNotFound", message: "Challenger record not found" },
   // Reward errors
-  6027: { name: "RewardAlreadyClaimed", message: "This reward has already been claimed" },
-  6028: { name: "RewardNotClaimed", message: "You must claim your reward first" },
-  6029: { name: "NotEligibleForReward", message: "You are not eligible for this reward" },
-  6030: { name: "ReputationAlreadyProcessed", message: "Reputation has already been processed for this vote" },
+  6032: { name: "RewardAlreadyClaimed", message: "This reward has already been claimed" },
+  6033: { name: "RewardNotClaimed", message: "You must claim your reward first" },
+  6034: { name: "NotEligibleForReward", message: "You are not eligible for this reward" },
+  6035: { name: "ReputationAlreadyProcessed", message: "Reputation has already been processed for this vote" },
   // Math errors
-  6031: { name: "ArithmeticOverflow", message: "Calculation error: arithmetic overflow" },
-  6032: { name: "DivisionByZero", message: "Calculation error: division by zero" },
+  6036: { name: "ArithmeticOverflow", message: "Calculation error: arithmetic overflow" },
+  6037: { name: "DivisionByZero", message: "Calculation error: division by zero" },
   // Escrow errors
-  6033: { name: "ClaimsNotComplete", message: "Not all claims have been processed" },
+  6038: { name: "ClaimsNotComplete", message: "Not all claims have been processed" },
+  // Treasury errors
+  6039: { name: "InsufficientFunds", message: "Insufficient funds in treasury" },
 };
 
 // Common Solana/Anchor errors with user-friendly messages

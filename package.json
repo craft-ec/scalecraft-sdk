@@ -1,6 +1,6 @@
 {
   "name": "@craftec/scalecraft-sdk",
-  "version": "0.1.0",
+  "version": "0.1.5",
   "description": "SDK for interacting with ScaleCraft - decentralized arbitration on Solana",
   "author": "Craftec",
   "license": "MIT",
